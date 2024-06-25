@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.TimeUnit;
 
 public class DownloadTask extends Thread{
     public final String url;
@@ -51,7 +52,15 @@ public class DownloadTask extends Thread{
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("error while downloading - it may starts again in second ....");
+
+            try{
+                TimeUnit.SECONDS.sleep(2000);
+            } catch (InterruptedException ex) {
+                System.out.println("Thread interrupted while retrying to download the file");
+                Thread.currentThread().interrupt();
+            }
+
         }
 
         // Print a message when download is complete
